@@ -34,7 +34,7 @@ public class UserController {
 
         var userCreated = this.userRepository.save(userModel); // save é um metodo do da extensão JPA que a interface //
                                                                // // // pegou
-        return ResponseEntity.status(HttpStatus.CREATED).body(userCreated);
+        return ResponseEntity.status(HttpStatus.OK).body(userCreated);
     }
 
 }
