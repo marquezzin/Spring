@@ -22,13 +22,14 @@ public class FilterTaskAuth extends OncePerRequestFilter {
     IUserRepository userRepository;
 
     @Override
-    // request é o que ta recebendo e respondeé o que deseja enviar (p/controller)
+    // request é o que ta recebendo e response o que deseja enviar (p/controller)
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
         var servletPath = request.getServletPath();
         // Fazer esse processo so para rota desejada
-        if (servletPath.equals("/tasks/")) {
+        // startsWith para pegar o tasks/{id} do update
+        if (servletPath.startsWith("/tasks/")) {
             // pegar a autenticação(usuario e senha)
             var authorization = request.getHeader("Authorization");
 
@@ -52,8 +53,9 @@ public class FilterTaskAuth extends OncePerRequestFilter {
                 var passwordVerify = BCrypt.verifyer().verify(password.toCharArray(), user.getPassword().toCharArray());
                 if (passwordVerify.verified) {
                     // segue viagem
-                    request.setAttribute("idUser", user.getId()); // guarda o id do user(uuer.getId()) no atributo para
-                                                                  // ser resgatado dps
+                    request.setAttribute("idUser", user.getId()); // guarda o id do user(user.getId()) no atributo
+                                                                  // idUser
+
                     filterChain.doFilter(request, response);
                     // é crucial para permitir que a requisição continue seu fluxo normal de
                     // processamento através da cadeia de filtros e, eventualmente, chegue ao
